@@ -15,4 +15,9 @@ class Post extends Model
         'author',
         'content',
     ];
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
+    }
 }
