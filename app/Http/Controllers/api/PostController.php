@@ -9,9 +9,18 @@ use App\Models\Tag;
 
 class PostController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::all()->load('tags');
+        if ($request->has('tag')) {
+            $tagName = $request->input('tag');
+            $tag = Tag::where('name', strtolower($tagName))->first();
+            if (!$tag) return response()->json([], 200);
+
+            $posts = $tag->posts()->get()->load('tags');
+        } else {
+            $posts = Post::all()->load('tags');
+        }
+        
         $transformedPosts = $posts->map(function ($post) {
             $postAttributes = $post->getAttributes();
             $postAttributes['tags'] = $post->tags->pluck('name')->toArray();
@@ -35,7 +44,7 @@ class PostController extends Controller
 
         $tagIds = [];
         foreach ($request->input('tags') as $tagName) {
-            $tag = Tag::firstOrCreate(['name' => $tagName]);
+            $tag = Tag::firstOrCreate(['name' => strtolower($tagName)]);
             $tagIds[] = $tag->id;
         }
 
@@ -66,7 +75,7 @@ class PostController extends Controller
 
         $tagIds = [];
         foreach ($request->input('tags') as $tagName) {
-            $tag = Tag::firstOrCreate(['name' => $tagName]);
+            $tag = Tag::firstOrCreate(['name' => strtolower($tagName)]);
             $tagIds[] = $tag->id;
         }
 
