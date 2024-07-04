@@ -38,3 +38,7 @@ docker-compose exec main php artisan migrate
 4. **Acessar a Aplicação**
 
 A aplicação estará disponível em http://localhost:8000.
+
+## Documentação da API
+
+A documentação da API estará disponível em [http://localhost:8000/api/documentation](http://localhost:8000/api/documentation).
