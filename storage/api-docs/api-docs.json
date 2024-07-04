@@ -1,0 +1,197 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API de Posts",
+        "version": "1.0"
+    },
+    "paths": {
+        "/api/posts": {
+            "get": {
+                "summary": "Lista todos os posts ou filtra todos por tag",
+                "operationId": "3db3501546bc1365f08721cfcfccecce",
+                "parameters": [
+                    {
+                        "name": "tag",
+                        "in": "query",
+                        "description": "Nome da tag para filtrar posts",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Cria um novo post",
+                "operationId": "547a053592489e19c9a4bf7d0f8ce80c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "author",
+                                    "content",
+                                    "tags"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Título do Post"
+                                    },
+                                    "author": {
+                                        "type": "string",
+                                        "example": "Autor do Post"
+                                    },
+                                    "content": {
+                                        "type": "string",
+                                        "example": "Conteúdo do Post"
+                                    },
+                                    "tags": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "tags",
+                                            "do",
+                                            "post"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Post criado com sucesso"
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                }
+            }
+        },
+        "/api/posts/{id}": {
+            "get": {
+                "summary": "Exibe um post específico",
+                "operationId": "8c69d0a743c72010a2b1d9a76f9c1071",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso"
+                    },
+                    "404": {
+                        "description": "Post não encontrado"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Atualiza um post específico",
+                "operationId": "ea5e63218b4f4350e259f6517dd02552",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "author",
+                                    "content",
+                                    "tags"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Título do Post Atualizado"
+                                    },
+                                    "author": {
+                                        "type": "string",
+                                        "example": "Autor do Post Atualizado"
+                                    },
+                                    "content": {
+                                        "type": "string",
+                                        "example": "Conteúdo do Post Atualizado"
+                                    },
+                                    "tags": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "tags",
+                                            "do",
+                                            "post",
+                                            "atualizadas"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Post atualizado com sucesso"
+                    },
+                    "404": {
+                        "description": "Post não encontrado"
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Deleta um post específico",
+                "operationId": "ae9ee528896629008e327c6f1749c9fd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Post deletado com sucesso"
+                    },
+                    "404": {
+                        "description": "Post não encontrado"
+                    }
+                }
+            }
+        }
+    }
+}
