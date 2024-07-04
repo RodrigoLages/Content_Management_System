@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\Tag;
+use App\Http\Requests\CreatePostRequest;
+use App\Http\Requests\UpdatePostRequest;
 
 class PostController extends Controller
 {
@@ -30,17 +32,9 @@ class PostController extends Controller
         return response()->json($transformedPosts);
     }
 
-    public function store(Request $request)
-    {
-        $validatedData = $request->validate([
-            'title' => 'required|max:255',
-            'author' => 'required|max:100',
-            'content' => 'required',
-            'tags' => 'required|array',
-            'tags.*' => 'string|max:50'
-        ]);
-    
-        $post = Post::create($validatedData);
+    public function store(CreatePostRequest  $request)
+    {    
+        $post = Post::create($request->all());
 
         $tagIds = [];
         foreach ($request->input('tags') as $tagName) {
@@ -66,9 +60,8 @@ class PostController extends Controller
         return response()->json($postAttributes);
     }
 
-    public function update(Request $request, string $id)
+    public function update(UpdatePostRequest $request, string $id)
     {
-
         $post = Post::findOrFail($id)->load('tags');
 
         $post->update($request->all());
