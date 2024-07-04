@@ -8,9 +8,9 @@ class PostResponse
 {
     use ApiResponseTrait;
 
-    public function success($post, $message = 'Post retrieved successfully', $status = 200)
+    public function success($post, $status = 200)
     {
-        return $this->successResponse($post, $message, $status);
+        return $this->successResponse($post, $status);
     }
 
     public function notFound($message = 'Post not found', $status = 404)

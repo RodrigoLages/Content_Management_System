@@ -39,7 +39,7 @@ class PostController extends Controller
             return $postAttributes;
         });
 
-        return $this->postResponse->success($transformedPosts, 'Posts retrieved successfully');
+        return $this->postResponse->success($transformedPosts);
     }
 
     public function store(CreatePostRequest  $request)
@@ -58,7 +58,7 @@ class PostController extends Controller
         $postAttributes = $post->getAttributes();
         $postAttributes['tags'] = $post->tags->pluck('name')->toArray();
 
-        return $this->postResponse->success($postAttributes, 'Post created successfully', 201);
+        return $this->postResponse->success($postAttributes, 201);
     }
 
     public function show(string $id)
@@ -93,7 +93,7 @@ class PostController extends Controller
         $postAttributes = $post->getAttributes();
         $postAttributes['tags'] = $post->tags->pluck('name')->toArray();
 
-        return $this->postResponse->success($postAttributes, 'Post updated successfully');
+        return $this->postResponse->success($postAttributes);
     }
 
     public function destroy(string $id)
@@ -101,6 +101,6 @@ class PostController extends Controller
         $post = Post::find($id);
         if (!$post) return $this->postResponse->notFound();
         $post->delete();
-        return $this->postResponse->success(null, 'Post deleted successfully');
+        return $this->postResponse->success(null, 204);
     }
 }
