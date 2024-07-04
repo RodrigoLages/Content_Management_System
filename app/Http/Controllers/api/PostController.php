@@ -6,11 +6,21 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\Tag;
+
 use App\Http\Requests\CreatePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use App\Http\Responses\PostResponse;
 
 class PostController extends Controller
 {
+
+    protected $postResponse;
+
+    public function __construct(PostResponse $postResponse)
+    {
+        $this->postResponse = $postResponse;
+    }
+
     public function index(Request $request)
     {
         if ($request->has('tag')) {
@@ -29,7 +39,7 @@ class PostController extends Controller
             return $postAttributes;
         });
 
-        return response()->json($transformedPosts);
+        return $this->postResponse->success($transformedPosts, 'Posts retrieved successfully');
     }
 
     public function store(CreatePostRequest  $request)
@@ -48,23 +58,28 @@ class PostController extends Controller
         $postAttributes = $post->getAttributes();
         $postAttributes['tags'] = $post->tags->pluck('name')->toArray();
 
-        return response()->json($postAttributes, 201);
+        return $this->postResponse->success($postAttributes, 'Post created successfully', 201);
     }
 
     public function show(string $id)
     {
-        $post = Post::findOrFail($id)->load('tags');
+        $post = Post::find($id);
+        if (!$post) return $this->postResponse->notFound();
+        $post->load('tags');
+        
+
         $postAttributes = $post->getAttributes();
         $postAttributes['tags'] = $post->tags->pluck('name')->toArray();
 
-        return response()->json($postAttributes);
+        return $this->postResponse->success($postAttributes);
     }
 
     public function update(UpdatePostRequest $request, string $id)
     {
-        $post = Post::findOrFail($id)->load('tags');
-
+        $post = Post::find($id);
+        if (!$post) return $this->postResponse->notFound();
         $post->update($request->all());
+        $post->load('tags');
 
         $tagIds = [];
         foreach ($request->input('tags') as $tagName) {
@@ -78,13 +93,14 @@ class PostController extends Controller
         $postAttributes = $post->getAttributes();
         $postAttributes['tags'] = $post->tags->pluck('name')->toArray();
 
-        return response()->json($postAttributes);
+        return $this->postResponse->success($postAttributes, 'Post updated successfully');
     }
 
     public function destroy(string $id)
     {
-        $post = Post::findOrFail($id);
+        $post = Post::find($id);
+        if (!$post) return $this->postResponse->notFound();
         $post->delete();
-        return response()->json(null, 204);
+        return $this->postResponse->success(null, 'Post deleted successfully');
     }
 }
