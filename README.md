@@ -29,13 +29,13 @@ Renomeie o arquivo `.env.example` para `.env` e configure as variáveis de ambie
 docker-compose up --build
 ```
 
-3. **Executar as Migrações do Banco de Dados**
+4. **Executar as Migrações do Banco de Dados**
 
 ```bash
 docker-compose exec main php artisan migrate
 ```
 
-4. **Acessar a Aplicação**
+5. **Acessar a Aplicação**
 
 A aplicação estará disponível em http://localhost:8000.
 
