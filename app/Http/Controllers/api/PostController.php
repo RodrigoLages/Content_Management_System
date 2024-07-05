@@ -167,15 +167,16 @@ class PostController extends Controller
         $post = Post::find($id);
         if (!$post) return $this->postResponse->notFound();
         $post->update($request->all());
-        $post->load('tags');
 
-        $tagIds = [];
-        foreach ($request->input('tags') as $tagName) {
-            $tag = Tag::firstOrCreate(['name' => strtolower($tagName)]);
-            $tagIds[] = $tag->id;
+        if ($request->input('tags')) {
+            $tagIds = [];
+            foreach ($request->input('tags') as $tagName) {
+                $tag = Tag::firstOrCreate(['name' => strtolower($tagName)]);
+                $tagIds[] = $tag->id;
+            }
+            
+            $post->tags()->sync($tagIds);
         }
-
-        $post->tags()->sync($tagIds);
 
         $post->load('tags');
         $postAttributes = $post->getAttributes();
